@@ -14,17 +14,17 @@ class Solution {
    
 public:
     bool leafSimilar(TreeNode* root1, TreeNode* root2) {
-        vector<int> v1,v2;
+       string v1="",v2="";
         leafS(root1,v1);
         leafS(root2,v2);
 
         return v1==v2;
     }
-    void leafS(TreeNode* n ,vector<int> &v){
+    void leafS(TreeNode* n ,string &v){
         if(n==nullptr)
             return;
         if(n->left==nullptr && n->right==nullptr){
-            v.push_back(n->val);
+            v+=to_string(n->val)+"-";
             return;
         }
         leafS(n->left,v);
