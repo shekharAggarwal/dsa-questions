@@ -34,6 +34,7 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     name: Publish Document
+    need: build
     steps:
       - name: Checkout
         uses: actions/checkout@v2
