@@ -1,0 +1,56 @@
+name: psot new code on linkedIn
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    - name: GETTING FOLDER NAME
+    steps:
+    - uses: Stockopedia/action-get-changed-files@v1
+      id: get_changed_folders
+      with:
+        github-token: ${{ secrets.TOKEN }}
+        ignore: "**/+(.github)"
+        foldersOnly: true 
+        format: csv
+    - name: Echo changed floders
+      run: echo ${{ steps.get_changed_folders.outputs.changed }}
+    - uses: rishabhgupta/split-by@v1
+      id: split
+      with:
+        string: ${{ steps.get_changed_folders.outputs.changed }}
+        split-by: ','
+    - run: | 
+        echo "${{ steps.split.outputs._0}}"
+
+  # BUILD CODE  
+  publish:
+    runs-on: ubuntu-latest
+    name: Publish Document
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Publish PDF Document
+        uses: shrink/actions-document-publish@v1
+        id: publish-document
+        with:
+          sources: "${{steps.split.outputs._0}}/README.md"
+      - name: Upload Document
+        uses: actions/upload-artifact@v2
+        id: upload-document
+        with:
+          name: '${{steps.split.outputs._0}}.pdf'
+          path: ${{ steps.publish-document.outputs.pdf }}
+  
+      # - uses: actions/checkout@v2
+      # - name: post new code on linkedIn
+      #   uses: linkedin/jobs-api-posting-action@master
+      #   with:
+      #     linkedin-oauth2-access-token: ${{ secrets.LINKEDIN_OAUTH2_ACCESS_TOKEN }}
+      #     linkedin-oauth2-refresh-token: ${{ secrets.LINKEDIN_OAUTH2_REFRESH_TOKEN }}
+      #     linkedin-oauth2-client-id: ${{ secrets.LINKEDIN_OAUTH2_CLIENT_ID }}
+      #     linkedin-oauth2-client-secret: ${{ secrets.LINKEDIN_OAUTH2_CLIENT_SECRET }}
+      #     linkedin-company-id: ${{ secrets.LINKEDIN_COMPANY_ID }}
+      #     linkedin-job-posting-json: ${{ secrets.LINKEDIN_JOB_POSTING_JSON }}
