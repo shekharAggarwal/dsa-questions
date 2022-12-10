@@ -12,7 +12,7 @@ jobs:
       uses: Stockopedia/action-get-changed-files@v1
       id: get_changed_folders
       with:
-        github-token: ${{ secrets.TOKEN }}
+        github-token: ${{ secrets.TOKEN || github.token }}
         ignore: "**/+(.github)"
         foldersOnly: true 
         format: csv
