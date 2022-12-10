@@ -6,8 +6,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    - name: GETTING FOLDER NAME
     steps:
+    - name: GETTING FOLDER NAME
     - uses: Stockopedia/action-get-changed-files@v1
       id: get_changed_folders
       with:
