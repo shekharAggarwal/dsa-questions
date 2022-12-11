@@ -16,40 +16,22 @@ jobs:
         ignore: "**/+(.github)"
         foldersOnly: true 
         format: csv
-
-    - name: Echo changed floders
-      run: echo ${{ steps.get_changed_folders.outputs.changed }}
-
-    - name: splitting the folder names
-      uses: rishabhgupta/split-by@v1
-      id: split
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Publish PDF Document
+      uses: shrink/actions-document-publish@v1
+      id: publish-document
       with:
-        string: ${{ steps.get_changed_folders.outputs.changed }}
-        split-by: ','
-    
-    - run: | 
-        echo "${{ steps.split.outputs._0}}"
+      
+        sources: "${{steps.get_changed_folders.outputs.changed}}/README.md"
+    - name: Upload Document
+      uses: actions/upload-artifact@v2
+      id: upload-document
+      with:
+        name: '${{steps.get_changed_folders.outputs.changed}}.pdf'
+        path: ${{ steps.publish-document.outputs.pdf }}
 
-  # BUILD CODE  
-  publish:
-    runs-on: ubuntu-latest
-    name: Publish Document
-    needs: [build]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Publish PDF Document
-        uses: shrink/actions-document-publish@v1
-        id: publish-document
-        with:
-          sources: "${{steps.split.outputs._0}}/README.md"
-      - name: Upload Document
-        uses: actions/upload-artifact@v2
-        id: upload-document
-        with:
-          name: '${{steps.split.outputs._0}}.pdf'
-          path: ${{ steps.publish-document.outputs.pdf }}
-  
+
       # - uses: actions/checkout@v2
       # - name: post new code on linkedIn
       #   uses: linkedin/jobs-api-posting-action@master
