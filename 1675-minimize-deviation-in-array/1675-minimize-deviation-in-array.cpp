@@ -5,7 +5,7 @@ public:
         for(int i = 0; i<nums.size() ; ++i)
         {
             if(nums[i] & 1)
-                s.insert(nums[i] * 2);
+                s.insert(nums[i]<<1);
             else
                 s.insert(nums[i]);
         }
