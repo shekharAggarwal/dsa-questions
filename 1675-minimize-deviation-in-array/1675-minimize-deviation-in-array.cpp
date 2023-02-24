@@ -12,7 +12,7 @@ public:
         
         int diff = *s.rbegin() - *s.begin();
         
-        while((*s.rbegin() & 1) == 0)
+        while(!(*s.rbegin() & 1))
         {
             int x = *s.rbegin();
             s.erase(x);
